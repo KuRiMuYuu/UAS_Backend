@@ -99,6 +99,15 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        .inline-group {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .inline-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -118,9 +127,9 @@
                     <label for="password">Kata Sandi</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <div class="input-group">
+                <div class="input-group inline-group">
                     <input type="checkbox" name="remember" id="remember">
-                    <label for="remember">Ingat Saya</label>
+                    <label for="remember">Save</label>
                 </div>
                 <button type="submit" class="login-btn">Masuk</button>
             </form>
