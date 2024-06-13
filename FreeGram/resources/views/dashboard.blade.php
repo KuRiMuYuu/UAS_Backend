@@ -158,7 +158,6 @@
     </style>
 </head>
 <body>
-    <div class="toggle-btn" onclick="toggleSidebar()">&#9776;</div>
     <div class="left-sidebar" id="left-sidebar">
         <div class="search-bar">
             <input type="text" placeholder="Search...">
@@ -202,9 +201,14 @@
     </div>
 
     <script>
-        function toggleSidebar() {
-            document.getElementById('left-sidebar').classList.toggle('open');
-        }
+        document.addEventListener('mousemove', function(e) {
+            const sidebar = document.getElementById('left-sidebar');
+            if (e.clientX < 50) {
+                sidebar.classList.add('open');
+            } else if (e.clientX > 250) {
+                sidebar.classList.remove('open');
+            }
+        });
     </script>
 </body>
 </html>
