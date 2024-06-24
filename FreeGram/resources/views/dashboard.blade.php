@@ -10,11 +10,12 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh;
+            /* height: 100vh; */ /* Ganti atau hapus properti height ini */
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
             overflow: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto; /* Enable vertical scroll */
         }
 
         .container {
@@ -72,9 +73,61 @@
             margin-bottom: 20px;
         }
 
-        .post img {
+        .post img, .post video {
             width: 100%;
             border-radius: 10px;
+        }
+
+        .upload-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .upload-container textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: none;
+        }
+
+        .upload-container input[type="file"] {
+            display: none;
+        }
+
+        .upload-container label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-container button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .upload-container button:hover {
+            background: #556cd6;
         }
 
         .sidebar {
@@ -154,7 +207,6 @@
             cursor: pointer;
             color: white;
         }
-
     </style>
 </head>
 <body>
@@ -176,19 +228,36 @@
 
         <div class="main-content">
             <div class="feed">
-                <div class="post">
-                    <img src="https://via.placeholder.com/800x400" alt="Post Image">
-                    <p>Post caption goes here...</p>
+                <!-- Upload Container Form -->
+                <div class="upload-container">
+                    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <textarea name="caption" placeholder="Write a caption..." required></textarea>
+                        <label for="file-upload">Choose a photo or video</label>
+                        <input type="file" id="file-upload" name="media" accept="image/*,video/*" required>
+                        <button type="submit">Post</button>
+                    </form>
                 </div>
+
+                <!-- Posts -->
+                @foreach ($posts as $post)
                 <div class="post">
-                    <img src="https://via.placeholder.com/800x400" alt="Post Image">
-                    <p>Post caption goes here...</p>
+                    @if ($post->media_type == 'image')
+                    <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
+                    @elseif ($post->media_type == 'video')
+                    <video controls>
+                        <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    @endif
+                    <p>{{ $post->caption }}</p>
                 </div>
+                @endforeach
             </div>
 
+            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="profile">
-                    <img src="https://via.placeholder.com/100" alt="Profile Picture">
                     <p>{{ Auth::user()->name }}</p>
                 </div>
 
