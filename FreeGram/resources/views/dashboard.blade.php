@@ -74,6 +74,9 @@
         }
 
         .feed .post {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -85,6 +88,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 10px;
+            width: 100%;
         }
 
         .post-header img {
@@ -98,33 +102,50 @@
             font-weight: bold;
         }
 
-        .post img, .post video {
+        .post-content {
+            width: 100%;
+        }
+
+        .post-content img, .post-content video {
             width: 100%;
             border-radius: 10px;
         }
 
-        .post .post-interactions {
+        .post-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .post-caption {
+            margin-bottom: 10px;
+        }
+
+        .post-interactions {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 10px;
         }
 
-        .post .post-interactions .likes-comments {
+        .post-interactions .likes-comments {
             display: flex;
             align-items: center;
         }
 
-        .post .post-interactions .likes-comments span {
+        .post-interactions .likes-comments span {
             margin-right: 10px;
             cursor: pointer;
         }
 
-        .post .post-interactions .likes-comments span:hover {
+        .post-interactions .likes-comments span:hover {
             text-decoration: underline;
         }
 
-        .post .post-interactions .like-btn, .post .post-interactions .comment-btn {
+        .post-interactions .like-btn, .post-interactions .comment-btn {
             cursor: pointer;
             color: #667eea;
         }
@@ -298,31 +319,35 @@
                         <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
                         <span class="username">{{ $post->user->name }}</span>
                     </div>
-                    @if ($post->media_type == 'image')
-                    <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
-                    @elseif ($post->media_type == 'video')
-                    <video controls>
-                        <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    @endif
-                    <p>{{ $post->caption }}</p>
-                    <div class="post-interactions">
-                        <div class="likes-comments">
-                            <span class="like-btn" onclick="event.preventDefault(); document.getElementById('like-form-{{ $post->id }}').submit();">
-                                @if($post->likes->where('user_id', Auth::id())->count() > 0)
-                                    Unlike
-                                @else
-                                    Like
-                                @endif
-                            </span>
-                            <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                            <span class="comment-btn">Comment</span>
-                        </div>
-                        <div class="likes-count">
-                            <span>{{ $post->likes->count() }} likes</span>
+                    <div class="post-content">
+                        @if ($post->media_type == 'image')
+                        <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
+                        @elseif ($post->media_type == 'video')
+                        <video controls>
+                            <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        @endif
+                    </div>
+                    <div class="post-body">
+                        <p class="post-caption">{{ $post->caption }}</p>
+                        <div class="post-interactions">
+                            <div class="likes-comments">
+                                <span class="like-btn" onclick="event.preventDefault(); document.getElementById('like-form-{{ $post->id }}').submit();">
+                                    @if($post->likes->where('user_id', Auth::id())->count() > 0)
+                                        Unlike
+                                    @else
+                                        Like
+                                    @endif
+                                </span>
+                                <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                <span class="comment-btn">Comment</span>
+                            </div>
+                            <div class="likes-count">
+                                <span>{{ $post->likes->count() }} likes</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,6 +366,5 @@
             }
         });
     </script>
-    
 </body>
 </html>
