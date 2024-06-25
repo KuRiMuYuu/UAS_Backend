@@ -15,4 +15,16 @@ class Post extends Model
         'media_path',
         'media_type',
     ];
+
+    // Relationship: Post belongs to a user
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Relationship: Post has many likes
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

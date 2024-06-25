@@ -10,12 +10,11 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            /* height: 100vh; */ /* Ganti atau hapus properti height ini */
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
-            overflow: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto; /* Enable vertical scroll */
+            overflow: hidden;
+            overflow-y: auto;
         }
 
         .container {
@@ -70,12 +69,59 @@
         }
 
         .feed .post {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-header .username {
+            font-weight: bold;
         }
 
         .post img, .post video {
             width: 100%;
             border-radius: 10px;
+        }
+
+        .post .post-interactions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .post .post-interactions .likes-comments {
+            display: flex;
+            align-items: center;
+        }
+
+        .post .post-interactions .likes-comments span {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .post .post-interactions .likes-comments span:hover {
+            text-decoration: underline;
+        }
+
+        .post .post-interactions .like-btn, .post .post-interactions .comment-btn {
+            cursor: pointer;
+            color: #667eea;
         }
 
         .upload-container {
@@ -239,35 +285,42 @@
                     </form>
                 </div>
 
-                <!-- Posts -->
-                @foreach ($posts as $post)
-                <div class="post">
-                    @if ($post->media_type == 'image')
-                    <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
-                    @elseif ($post->media_type == 'video')
-                    <video controls>
-                        <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    @endif
-                    <p>{{ $post->caption }}</p>
-                </div>
-                @endforeach
+        <!-- Example of how you might display posts in your dashboard.blade.php -->
+        @foreach ($posts as $post)
+        <div class="post">
+            <div class="post-header">
+                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
+                <span class="username">{{ $post->user->name }}</span>
             </div>
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="profile">
-                    <p>{{ Auth::user()->name }}</p>
+            @if ($post->media_type == 'image')
+            <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
+            @elseif ($post->media_type == 'video')
+            <video controls>
+                <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            @endif
+            <p>{{ $post->caption }}</p>
+            <div class="post-interactions">
+                <div class="likes-comments">
+                    <span class="like-btn" onclick="event.preventDefault(); document.getElementById('like-form-{{ $post->id }}').submit();">
+                        @if($post->likes->where('user_id', Auth::id())->count() > 0)
+                            Unlike
+                        @else
+                            Like
+                        @endif
+                    </span>
+                    <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                    <span class="comment-btn">Comment</span>
                 </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
+                <div class="likes-count">
+                    <span>{{ $post->likes->count() }} likes</span>
+                </div>
             </div>
         </div>
-    </div>
+        @endforeach
 
     <script>
         document.addEventListener('mousemove', function(e) {
@@ -279,5 +332,6 @@
             }
         });
     </script>
+    
 </body>
 </html>
