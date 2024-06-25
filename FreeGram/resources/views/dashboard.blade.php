@@ -44,14 +44,19 @@
             color: #667eea;
         }
 
-        .navbar .nav-links a {
-            margin: 0 10px;
-            color: #333;
-            text-decoration: none;
+        .navbar .logout-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
-        .navbar .nav-links a:hover {
-            text-decoration: underline;
+        .navbar .logout-btn:hover {
+            background: #556cd6;
         }
 
         .main-content {
@@ -200,22 +205,6 @@
             font-weight: bold;
         }
 
-        .logout-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #667eea;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #556cd6;
-        }
-
         .left-sidebar {
             position: fixed;
             left: 0;
@@ -245,6 +234,20 @@
             font-size: 16px;
         }
 
+        .left-sidebar .nav-links a {
+            display: block;
+            margin: 10px 0;
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .left-sidebar .nav-links a:hover {
+            background: #f0f0f0;
+        }
+
         .toggle-btn {
             position: absolute;
             left: 20px;
@@ -260,16 +263,19 @@
         <div class="search-bar">
             <input type="text" placeholder="Search...">
         </div>
+        <div class="nav-links">
+            <a href="#">Profile</a>
+            <a href="#">Messages</a>
+        </div>
     </div>
 
     <div class="container">
         <div class="navbar">
             <div class="logo">FreeGram</div>
-            <div class="nav-links">
-                <a href="#">Home</a>
-                <a href="#">Profile</a>
-                <a href="#">Messages</a>
-            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
 
         <div class="main-content">
@@ -285,42 +291,45 @@
                     </form>
                 </div>
 
-        <!-- Example of how you might display posts in your dashboard.blade.php -->
-        @foreach ($posts as $post)
-        <div class="post">
-            <div class="post-header">
-                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
-                <span class="username">{{ $post->user->name }}</span>
-            </div>
-            @if ($post->media_type == 'image')
-            <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
-            @elseif ($post->media_type == 'video')
-            <video controls>
-                <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            @endif
-            <p>{{ $post->caption }}</p>
-            <div class="post-interactions">
-                <div class="likes-comments">
-                    <span class="like-btn" onclick="event.preventDefault(); document.getElementById('like-form-{{ $post->id }}').submit();">
-                        @if($post->likes->where('user_id', Auth::id())->count() > 0)
-                            Unlike
-                        @else
-                            Like
-                        @endif
-                    </span>
-                    <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                    <span class="comment-btn">Comment</span>
+                <!-- Example of how you might display posts in your dashboard.blade.php -->
+                @foreach ($posts as $post)
+                <div class="post">
+                    <div class="post-header">
+                        <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
+                        <span class="username">{{ $post->user->name }}</span>
+                    </div>
+                    @if ($post->media_type == 'image')
+                    <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">
+                    @elseif ($post->media_type == 'video')
+                    <video controls>
+                        <source src="{{ asset('storage/' . $post->media_path) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    @endif
+                    <p>{{ $post->caption }}</p>
+                    <div class="post-interactions">
+                        <div class="likes-comments">
+                            <span class="like-btn" onclick="event.preventDefault(); document.getElementById('like-form-{{ $post->id }}').submit();">
+                                @if($post->likes->where('user_id', Auth::id())->count() > 0)
+                                    Unlike
+                                @else
+                                    Like
+                                @endif
+                            </span>
+                            <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <span class="comment-btn">Comment</span>
+                        </div>
+                        <div class="likes-count">
+                            <span>{{ $post->likes->count() }} likes</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="likes-count">
-                    <span>{{ $post->likes->count() }} likes</span>
-                </div>
+                @endforeach
             </div>
         </div>
-        @endforeach
+    </div>
 
     <script>
         document.addEventListener('mousemove', function(e) {
