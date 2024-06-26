@@ -53,4 +53,17 @@ class LoginController extends Controller
 
         return redirect('/');
     }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+    $errors = $this->username() ;
+
+    if ($request->expectsJson()) {
+        return response()->json($errors, 422);
+    }
+
+    return redirect()->back()
+        ->withInput($request->only($this->username(), 'remember'))
+        ->withErrors($errors);
+}
 }

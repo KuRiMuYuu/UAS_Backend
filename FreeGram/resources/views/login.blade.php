@@ -108,6 +108,11 @@
         .inline-group input[type="checkbox"] {
             margin-right: 5px;
         }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -117,6 +122,9 @@
                 <h1>Selamat Datang!</h1>
                 <p>Masuk untuk melanjutkan</p>
             </div>
+            @if ($errors->has('email'))
+                <div class="error-message">{{ $errors->first('email') }}</div>
+            @endif
             <form action="{{ route('login') }}" method="POST">
                 @csrf
                 <div class="input-group">
