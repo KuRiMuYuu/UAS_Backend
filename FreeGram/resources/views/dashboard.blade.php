@@ -293,6 +293,9 @@
     <div class="container">
         <div class="navbar">
             <div class="logo">FreeGram</div>
+            <div class="profile">
+            <p>{{ Auth::user()->name }}</p>
+                </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-btn">Logout</button>
