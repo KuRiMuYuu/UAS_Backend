@@ -122,8 +122,8 @@
                 <h1>Selamat Datang!</h1>
                 <p>Masuk untuk melanjutkan</p>
             </div>
-            @if ($errors->has('email'))
-                <div class="error-message">{{ $errors->first('email') }}</div>
+            @if ($errors->any())
+                <div class="error-message">{{ $errors->first() }}</div>
             @endif
             <form action="{{ route('login') }}" method="POST">
                 @csrf

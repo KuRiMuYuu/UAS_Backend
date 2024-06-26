@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::resource('posts', PostController::class);
 Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
 Route::resource('posts', PostController::class);
 Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
 
-
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('login', [LoginController::class, 'login'])->name('login');
+});
 
 require __DIR__.'/auth.php';

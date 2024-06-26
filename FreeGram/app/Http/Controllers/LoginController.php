@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    use ThrottlesLogins;
+
+    public function __construct()
+    {
+        $this->middleware('throttle:5,1')->only('login');
+    }
+
     /**
      * Menampilkan formulir login.
      *
@@ -34,7 +42,7 @@ class LoginController extends Controller
         }
 
         // Jika otentikasi gagal, kembalikan ke halaman login dengan pesan kesalahan
-        return redirect()->back()->withErrors(['email' => 'Email atau kata sandi salah']);
+        return $this->sendFailedLoginResponse($request);
     }
 
     /**
@@ -54,16 +62,27 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    /**
+     * Mengirim respons jika login gagal.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     protected function sendFailedLoginResponse(Request $request)
     {
-    $errors = $this->username() ;
+        $errors = [$this->username() => 'Incorrect username or password.'];
 
-    if ($request->expectsJson()) {
-        return response()->json($errors, 422);
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            $errors = [$this->username() => 'You have been locked out due to too many failed login attempts. Please try again in ' . $this->decayMinutes() * 60 . ' seconds.'];
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json($errors, 422);
+        }
+
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
     }
-
-    return redirect()->back()
-        ->withInput($request->only($this->username(), 'remember'))
-        ->withErrors($errors);
-}
 }
