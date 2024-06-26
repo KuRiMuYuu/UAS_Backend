@@ -388,7 +388,7 @@
         </div>
         <div class="nav-links">
             <a href="#">Profile</a>
-            <a href="#">Messages</a>
+            <a href="/message">Messages</a>
         </div>
     </div>
 
