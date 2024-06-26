@@ -280,6 +280,7 @@
 
         .left-sidebar .search-bar {
             margin-bottom: 20px;
+            width: 80%;
         }
 
         .left-sidebar .search-bar input {
@@ -373,7 +374,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .komeng_htn:active{
+        .komeng_btn:active{
             background-color: #4458a3;
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
@@ -411,7 +412,7 @@
                 <div class="upload-container">
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <textarea name="caption" placeholder="Beri foto kamu caption!" required></textarea>
+                        <textarea name="caption" placeholder="Beri foto atau video kamu caption!" required></textarea>
                         <label for="file-upload">Choose a photo or video</label>
                         <input type="file" id="file-upload" name="media" accept="image/*,video/*" required>
                         <button type="submit">POST</button>
