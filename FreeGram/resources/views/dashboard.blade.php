@@ -52,12 +52,22 @@
             color: white;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .navbar .logout-btn:hover {
-            background: #556cd6;
+            background-color: red;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
+        .navbar .logout-btn:active {
+            background-color: red;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
 
         .main-content {
             display: flex;
@@ -106,9 +116,21 @@
             width: 100%;
         }
 
-        .post-content img, .post-content video {
+        .post-content img{
+            width: 80%;
+            border-radius: 10px;
+            max-width: 500px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            
+        }
+        .post-content video{
             width: 100%;
             border-radius: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .post-body {
@@ -179,28 +201,41 @@
             display: none;
         }
 
-        .upload-container label {
+        .upload-container button {
+            display: inline-block;
+            padding: 15px 20px;
+            padding-top: 15px;
+            padding-bottom: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .upload-container label{
             display: inline-block;
             padding: 10px 20px;
             background: #667eea;
             color: white;
             border-radius: 5px;
             cursor: pointer;
-        }
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .upload-container button {
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+        .upload-container label:hover, .upload-container button:hover {
+            background-color: #008000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-        .upload-container button:hover {
-            background: #556cd6;
-        }
+        .upload-container label:active, .upload-container button:active {
+            background-color: #006400;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
         .sidebar {
             flex: 1;
@@ -291,6 +326,59 @@
         .delete-btn:hover {
             background: #e60000;
         }
+
+        .nama_user{
+            font-weight: bold;
+            text-align: center;
+        }
+        .atasuser{
+            text-align: center;
+        }
+        .likes-count{
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .komeng textarea {
+            width: 96%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .komeng textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
+
+        .komeng_btn{
+            padding: 10px 20px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .komeng_btn:hover{
+            background-color: #556cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .komeng_htn:active{
+            background-color: #4458a3;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+        }
+
     </style>
 </head>
 <body>
@@ -308,7 +396,8 @@
         <div class="navbar">
             <div class="logo">FreeGram</div>
             <div class="profile">
-                <p>{{ Auth::user()->name }}</p>
+                <p class="atasuser">Welcome back!</p>
+                <p class="nama_user">{{ Auth::user()->name }}</p>
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -322,10 +411,10 @@
                 <div class="upload-container">
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <textarea name="caption" placeholder="Write a caption..." required></textarea>
+                        <textarea name="caption" placeholder="Beri foto kamu caption!" required></textarea>
                         <label for="file-upload">Choose a photo or video</label>
                         <input type="file" id="file-upload" name="media" accept="image/*,video/*" required>
-                        <button type="submit">Post</button>
+                        <button type="submit">POST</button>
                     </form>
                 </div>
 
@@ -376,11 +465,11 @@
                         </div>
 
                         <!-- Comment Form -->
-                        <div id="comment-form-{{ $post->id }}" style="display: none; margin-top: 10px;">
+                        <div class="komeng"id="comment-form-{{ $post->id }}" style="display: none; margin-top: 10px;">
                             <form method="POST" action="{{ route('comments.store', $post->id) }}">
                                 @csrf
-                                <textarea name="body" placeholder="Write a comment..." required></textarea>
-                                <button type="submit">Post Comment</button>
+                                <textarea name="body" placeholder="Tuliskan komentar mu!" required></textarea>
+                                <button class="komeng_btn" type="submit">Kirim</button>
                             </form>
                         </div>
 
