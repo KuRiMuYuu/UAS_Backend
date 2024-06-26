@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -55,5 +56,26 @@ class PostController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    // Delete a post
+    public function destroy($id)
+    {
+        $post = Post::findOrFail($id);
+
+        // Pastikan hanya pengguna yang mengunggah postingan yang dapat menghapusnya
+        if ($post->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You are not authorized to delete this post.');
+        }
+
+        // Hapus file media dari storage
+        if ($post->media_path) {
+            Storage::delete($post->media_path);
+        }
+
+        // Hapus postingan dari database
+        $post->delete();
+
+        return redirect()->back()->with('success', 'Post deleted successfully.');
     }
 }

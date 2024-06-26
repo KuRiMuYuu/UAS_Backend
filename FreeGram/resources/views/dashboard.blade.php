@@ -277,6 +277,20 @@
             cursor: pointer;
             color: white;
         }
+
+        .delete-btn {
+            padding: 5px 10px;
+            background: #ff4d4d;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #e60000;
+        }
     </style>
 </head>
 <body>
@@ -321,6 +335,14 @@
                     <div class="post-header">
                         <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
                         <span class="username">{{ $post->user->name }}</span>
+                        @if ($post->user_id === Auth::id())
+                        <!-- Tambahkan Tombol Hapus -->
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="margin-left: auto;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                        @endif
                     </div>
                     <div class="post-content">
                         @if ($post->media_type == 'image')
