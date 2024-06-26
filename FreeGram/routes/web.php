@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
-
+use App\Http\Controllers\CommentController;
 
 Route::resource('posts', PostController::class);
 Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth'])->name('dashboard');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     
 });
 

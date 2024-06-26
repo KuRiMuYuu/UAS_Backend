@@ -294,8 +294,8 @@
         <div class="navbar">
             <div class="logo">FreeGram</div>
             <div class="profile">
-            <p>{{ Auth::user()->name }}</p>
-                </div>
+                <p>{{ Auth::user()->name }}</p>
+            </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-btn">Logout</button>
@@ -346,11 +346,29 @@
                                 <form id="like-form-{{ $post->id }}" action="{{ route('posts.like', $post->id) }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
-                                <span class="comment-btn">Comment</span>
+                                <span class="comment-btn" onclick="toggleCommentForm({{ $post->id }});">Comment</span>
                             </div>
                             <div class="likes-count">
                                 <span>{{ $post->likes->count() }} likes</span>
                             </div>
+                        </div>
+
+                        <!-- Comment Form -->
+                        <div id="comment-form-{{ $post->id }}" style="display: none; margin-top: 10px;">
+                            <form method="POST" action="{{ route('comments.store', $post->id) }}">
+                                @csrf
+                                <textarea name="body" placeholder="Write a comment..." required></textarea>
+                                <button type="submit">Post Comment</button>
+                            </form>
+                        </div>
+
+                        <!-- Display Comments -->
+                        <div class="comments">
+                            @foreach ($post->comments as $comment)
+                            <div class="comment">
+                                <p><strong>{{ $comment->user->name }}:</strong> {{ $comment->body }}</p>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -368,6 +386,11 @@
                 sidebar.classList.remove('open');
             }
         });
+
+        function toggleCommentForm(postId) {
+            const form = document.getElementById('comment-form-' + postId);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </body>
 </html>

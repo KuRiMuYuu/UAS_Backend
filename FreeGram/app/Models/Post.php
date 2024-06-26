@@ -27,4 +27,11 @@ class Post extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    // Relationship:  post Belong has many coment
+    public function comments()
+    {
+    return $this->hasMany(Comment::class);
+    }
+
 }
