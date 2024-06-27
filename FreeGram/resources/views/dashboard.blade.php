@@ -393,6 +393,11 @@
             border-radius: 10px; 
             object-fit: cover; 
         }
+        .timestamp{
+            margin-left: 10px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -465,7 +470,7 @@
                 @foreach ($posts->reverse() as $post)
                 <div class="post">
                     <div class="post-header">
-                        <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
+                        <img src="{{ asset('storage/' . $post->user->profile_picture) }}" alt="User Profile">
                         <span class="username">{{ $post->user->name }}</span>
                         @if ($post->user_id === Auth::id())
                         <!-- Tambahkan Tombol Hapus -->
@@ -476,6 +481,7 @@
                         </form>
                         @endif
                     </div>
+                    <div class="timestamp">{{ $post->created_at->diffForHumans() }}</div>
                     <div class="post-content">
                         @if ($post->media_type == 'image')
                         <img src="{{ asset('storage/' . $post->media_path) }}" alt="Post Image">

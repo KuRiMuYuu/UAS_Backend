@@ -35,7 +35,7 @@ Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
 Route::middleware('throttle:5,1')->group(function () {
     Route::post('login', [LoginController::class, 'login'])->name('login');
 });
-
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile/remove_picture', [ProfileController::class, 'removePicture'])->name('profile.remove_picture');
 
 require __DIR__.'/auth.php';

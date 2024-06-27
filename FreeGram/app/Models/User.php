@@ -18,8 +18,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'email',    
         'password',
+        'profile_picture',
     ];
 
     /**
@@ -62,5 +63,9 @@ class User extends Authenticatable
     return $this->hasMany(Comment::class);
     }
 
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_picture ? asset('storage/public' . $this->profile_picture) : asset('images/default-profile.png');
+    }
 
 }

@@ -43,7 +43,13 @@
             font-weight: bold;
             color: #667eea;
         }
-
+        
+        .navbar .logo a{
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
         .navbar .logout-btn {
             padding: 10px 20px;
             background: #667eea;
@@ -106,7 +112,7 @@
         }
 
         .form-group input, .form-group textarea {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -206,7 +212,9 @@
         .left-sidebar .nav-links a:hover {
             background: #f0f0f0;
         }
-
+        .inputbox{
+            width: 80%;
+        }
     </style>
 </head>
 <body>
@@ -222,7 +230,7 @@
 
     <div class="container">
         <div class="navbar">
-            <div class="logo">FreeGram</div>
+            <div class="logo"><a href="/dashboard">FreeGram</a></div>
             <div class="profile">
                 <p class="atasuser">Welcome back!</p>
                 <p class="nama_user">{{ Auth::user()->name }}</p>
@@ -270,6 +278,33 @@
                         </div>
                     </form>
                 </div>
+                <div class="section-header">Update Profile Picture</div>
+                <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+                    @csrf
+                    @method('patch')
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" value="{{ Auth::user()->name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{ Auth::user()->email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_picture">Profile Picture</label>
+                        <input type="file" name="profile_picture" id="profile_picture">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Update Profile</button>
+                    </div>
+                </form>
+                <form method="post" action="{{ route('profile.remove_picture') }}" class="mt-6 space-y-6">
+                @csrf
+                @method('delete')
+                <div class="form-group">
+                    <button type="submit">Remove Profile Picture</button>
+                </div>
+            </form>
 
                 <div class="section">
                     <div class="section-header">Update Password</div>

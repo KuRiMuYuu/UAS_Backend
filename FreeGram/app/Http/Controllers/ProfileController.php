@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -31,6 +31,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore(Auth::user()->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(Auth::user()->id)],
+            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
         if ($validator->fails()) {
@@ -60,6 +61,15 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
+        // Tangani upload gambar
+        if ($request->hasFile('profile_picture')) {
+            if ($user->profile_picture) {
+                Storage::delete($user->profile_picture);
+            }
+            $path = $request->file('profile_picture')->store('profile_pictures','public');
+            $user->profile_picture = $path;
+        }
+
         // Simpan user
         $user->save();
 
@@ -70,11 +80,27 @@ class ProfileController extends Controller
             $message = 'You have successfully changed your username.';
         } elseif ($emailChanged) {
             $message = 'You have successfully changed your email.';
-        } else {
-            $message = 'No changes were made.';
+        } 
+        else {
+            $message = 'changes were made.';
         }
 
         return redirect()->route('profile.edit')->with('status', $message);
+    }
+
+    /**
+     * Remove the user's profile picture.
+     */
+    public function removePicture(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        if ($user->profile_picture) {
+            Storage::delete($user->profile_picture);
+            $user->profile_picture = null;
+            $user->save();
+        }
+
+        return redirect()->route('profile.edit')->with('status', 'Profile picture removed successfully.');
     }
 
     /**
@@ -89,6 +115,10 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+
+        if ($user->profile_picture) {
+            Storage::delete($user->profile_picture);
+        }
 
         $user->delete();
 
