@@ -36,4 +36,6 @@ Route::middleware('throttle:5,1')->group(function () {
     Route::post('login', [LoginController::class, 'login'])->name('login');
 });
 
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
 require __DIR__.'/auth.php';

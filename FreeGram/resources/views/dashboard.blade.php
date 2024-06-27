@@ -388,7 +388,7 @@
             <input type="text" placeholder="Search...">
         </div>
         <div class="nav-links">
-            <a href="#">Profile</a>
+            <a href="/profile">Profile</a>
             <a href="/message">Messages</a>
         </div>
     </div>
