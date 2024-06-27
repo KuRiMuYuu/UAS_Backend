@@ -462,7 +462,7 @@
                 </script>
 
                 <!-- Example of how you might display posts in your dashboard.blade.php -->
-                @foreach ($posts as $post)
+                @foreach ($posts->reverse() as $post)
                 <div class="post">
                     <div class="post-header">
                         <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="User Profile">
