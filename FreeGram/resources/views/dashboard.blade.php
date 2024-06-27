@@ -380,6 +380,20 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
         }
 
+        #video-preview {
+            max-width: 20%; 
+            display: none; 
+            border-radius: 10px; 
+        }
+
+        #image-preview {
+            max-width: 100px; 
+            max-height: 100px; 
+            display: none; 
+            border-radius: 10px; 
+            object-fit: cover; 
+        }
+
     </style>
 </head>
 <body>
@@ -416,8 +430,36 @@
                         <label for="file-upload">Choose a photo or video</label>
                         <input type="file" id="file-upload" name="media" accept="image/*,video/*" required>
                         <button type="submit">POST</button>
+                        <div class="preview-container"></div>
+                        <img id="image-preview" src="#" alt="Preview" style="display:none">
+                        <video id="video-preview" src="#" style="display:none"></video>
                     </form>
                 </div>
+
+                <script>
+                    const fileUpload = document.getElementById('file-upload');
+                    const imagePreview = document.getElementById('image-preview');
+                    const videoPreview = document.getElementById('video-preview');
+
+                    fileUpload.addEventListener('change', function() {
+                        const file = this.files[0];
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            if (file.type.includes('image')) {
+                                imagePreview.style.display = 'block';
+                                videoPreview.style.display = 'none';
+                                imagePreview.src = e.target.result;
+                            } else if (file.type.includes('video')) {
+                                videoPreview.style.display = 'block';
+                                imagePreview.style.display = 'none';
+                                videoPreview.src = e.target.result;
+                            }
+                        };
+
+                        reader.readAsDataURL(file);
+                    });
+                </script>
 
                 <!-- Example of how you might display posts in your dashboard.blade.php -->
                 @foreach ($posts as $post)
