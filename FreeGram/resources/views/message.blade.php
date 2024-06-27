@@ -37,6 +37,14 @@
             color: white;
         }
 
+        .navbar a{
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+
         .navbar .logo {
             font-size: 1.5rem;
             font-weight: bold;
@@ -224,7 +232,7 @@
         </div>    
     <div class="container">
         <div class="navbar">
-            <div class="logo">FreeGram</div>
+        <div class="logo"><a href="/dashboard">FreeGram</a></div>
         </div>
 
         <div class="main-content">
